@@ -1,0 +1,61 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;esayServer&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../git.moumentei.com" />
+      <root url="file://$PROJECT_DIR$/../comment" />
+      <root url="file://$PROJECT_DIR$/../qiniu-proxy" />
+      <root url="file://$PROJECT_DIR$/../net" />
+      <root url="file://$PROJECT_DIR$/../config" />
+      <root url="file://$PROJECT_DIR$/../user" />
+      <root url="file://$PROJECT_DIR$/../file_uploader" />
+      <root url="file://$PROJECT_DIR$/../ios_collect" />
+      <root url="file://$PROJECT_DIR$/../article" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../upload_server" />
+      <root url="file://$PROJECT_DIR$/../logger" />
+      <root url="file://$PROJECT_DIR$/../.idea" />
+      <root url="file://$PROJECT_DIR$/../bp" />
+      <root url="file://$PROJECT_DIR$/../mytest" />
+      <root url="file://$PROJECT_DIR$/../.metadata" />
+      <root url="file://$PROJECT_DIR$/../git-wip-us.apache.org" />
+      <root url="file://$PROJECT_DIR$/../rpc" />
+      <root url="file://$PROJECT_DIR$/../test" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../artfile" />
+      <root url="file://$PROJECT_DIR$/../services" />
+      <root url="file://$PROJECT_DIR$/../git.apache.org" />
+      <root url="file://$PROJECT_DIR$/../qiniupkg.com" />
+    </CLASSES>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../git.moumentei.com" />
+      <root url="file://$PROJECT_DIR$/../comment" />
+      <root url="file://$PROJECT_DIR$/../qiniu-proxy" />
+      <root url="file://$PROJECT_DIR$/../net" />
+      <root url="file://$PROJECT_DIR$/../config" />
+      <root url="file://$PROJECT_DIR$/../user" />
+      <root url="file://$PROJECT_DIR$/../file_uploader" />
+      <root url="file://$PROJECT_DIR$/../ios_collect" />
+      <root url="file://$PROJECT_DIR$/../article" />
+      <root url="file://$PROJECT_DIR$/../github.com" />
+      <root url="file://$PROJECT_DIR$/../upload_server" />
+      <root url="file://$PROJECT_DIR$/../logger" />
+      <root url="file://$PROJECT_DIR$/../.idea" />
+      <root url="file://$PROJECT_DIR$/../bp" />
+      <root url="file://$PROJECT_DIR$/../mytest" />
+      <root url="file://$PROJECT_DIR$/../.metadata" />
+      <root url="file://$PROJECT_DIR$/../git-wip-us.apache.org" />
+      <root url="file://$PROJECT_DIR$/../rpc" />
+      <root url="file://$PROJECT_DIR$/../test" />
+      <root url="file://$PROJECT_DIR$/../golang.org" />
+      <root url="file://$PROJECT_DIR$/../artfile" />
+      <root url="file://$PROJECT_DIR$/../services" />
+      <root url="file://$PROJECT_DIR$/../git.apache.org" />
+      <root url="file://$PROJECT_DIR$/../qiniupkg.com" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>
