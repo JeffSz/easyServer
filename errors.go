@@ -1,4 +1,4 @@
-package esayServer
+package easyServer
 
 type Error struct{
 	error

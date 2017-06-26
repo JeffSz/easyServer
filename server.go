@@ -1,4 +1,4 @@
-package esayServer
+package easyServer
 
 
 import (
@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"fmt"
 	"io"
-	"runtime"
 	"errors"
 	logger "github.com/JeffSz/logger"
 	"strings"
@@ -35,7 +34,7 @@ type Server struct{
 	routes []MyRouter
 	errorHandler func(w http.ResponseWriter, error Error) error
 }
-func (server *Server) addRoute(url string, method Method, handler func(http.ResponseWriter, *http.Request)) error{
+func (server *Server) AddRoute(url string, method Method, handler func(http.ResponseWriter, *http.Request)) error{
 	if method != HTTP_GET && method != HTTP_POST && method != HTTP_ALL{
 		return errors.New("Method not allow")
 	}
@@ -47,13 +46,13 @@ func (server *Server) addRoute(url string, method Method, handler func(http.Resp
 	}
 }
 
-func (server *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	start_time := time.Now()
 	defer func() {
 		if err := recover(); err != nil {
 			logger.Info(fmt.Sprintf("%s\n", stack()))
 			if er, is := err.(Error); is{
-				server.errorHandler(er)
+				server.errorHandler(w, er)
 				logger.Debug(time.Now(), "request:", r, time_sub(start_time), http.StatusBadRequest)
 			}else{
 				w.WriteHeader(http.StatusInternalServerError)
@@ -83,8 +82,8 @@ func init() {
 	HTTPMethods["ALL"] = HTTP_ALL
 }
 
-func NewServer(errorHandler *func(http.ResponseWriter, Error) error) *Server{
-	return &Server{routes:make([]MyRouter, 0), errorHandler: *errorHandler}
+func NewServer(errorHandler func(http.ResponseWriter, Error) error) *Server{
+	return &Server{routes:make([]MyRouter, 0), errorHandler: errorHandler}
 }
 
 func easyHander(w http.ResponseWriter, error Error) error{
@@ -93,4 +92,4 @@ func easyHander(w http.ResponseWriter, error Error) error{
 	return nil
 }
 
-var EsayServer = NewServer(&easyHander)
+var EasyServer = NewServer(easyHander)

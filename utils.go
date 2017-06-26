@@ -1,4 +1,4 @@
-package esayServer
+package easyServer
 
 import "runtime"
 
