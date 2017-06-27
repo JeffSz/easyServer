@@ -5,7 +5,6 @@ import (
 	"io"
 	"time"
 	"easyServer"
-	"net"
 	"fmt"
 	"flag"
 	"github.com/smartystreets/assertions"
