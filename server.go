@@ -10,6 +10,7 @@ import (
 	"errors"
 	logger "github.com/JeffSz/logger"
 	"strings"
+	"net"
 )
 func time_sub(t time.Time) int64 {
 	return int64(time.Now().Sub(t) / time.Millisecond)
@@ -80,6 +81,23 @@ func init() {
 	HTTPMethods["PUT"] = HTTP_PUT
 	HTTPMethods["DELETE"] = HTTP_DELETE
 	HTTPMethods["ALL"] = HTTP_ALL
+}
+
+func LocalIP() string{
+	addrs, err := net.InterfaceAddrs()
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, address := range addrs {
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String()
+			}
+		}
+	}
+	panic("No such device")
 }
 
 func NewServer(errorHandler func(http.ResponseWriter, Error) error) *Server{

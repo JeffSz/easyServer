@@ -17,21 +17,7 @@ func main() {
 	port := flag.String("port", "8001", "server port")
 	flag.Parse()
 
-	ip := "localhost"
-	addrs, err := net.InterfaceAddrs()
-
-	if err != nil {
-		panic(err)
-	}
-
-	for _, address := range addrs {
-		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-			if ipnet.IP.To4() != nil {
-				ip = ipnet.IP.String()
-				break
-			}
-		}
-	}
+	ip := easyServer.LocalIP()
 
 	server := *easyServer.EasyServer
 
