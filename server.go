@@ -72,7 +72,7 @@ func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusNotFound)
 	io.WriteString(w, "Page not found")
-	logger.Warn(time.Now(), "request:", r, time_sub(start_time), http.StatusNotFound)
+	logger.Warn(time.Now(), "request:", *r, time_sub(start_time), http.StatusNotFound)
 }
 
 func init() {
