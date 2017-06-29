@@ -54,19 +54,19 @@ func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			logger.Info(fmt.Sprintf("%s\n", stack()))
 			if er, is := err.(Error); is{
 				server.errorHandler(w, er)
-				logger.Debug(time.Now(), "request:", r, time_sub(start_time), http.StatusBadRequest)
+				logger.Debug(time.Now(), "request:", *r, time_sub(start_time), http.StatusBadRequest)
 			}else{
 				w.WriteHeader(http.StatusInternalServerError)
 				io.WriteString(w, "Server Error")
 				logger.Error(err)
-				logger.Error(time.Now(), "request:", r, time_sub(start_time), http.StatusInternalServerError)
+				logger.Error(time.Now(), "request:", *r, time_sub(start_time), http.StatusInternalServerError)
 			}
 		}
 	}()
 	for _, router := range server.routes{
 		if router.pattern.MatchString(r.URL.Path) && (router.method & HTTPMethods[strings.ToUpper(r.Method)] != 0x00){
 			router.handler(w, r)
-			logger.Debug(time.Now(), "request:", r, time_sub(start_time), http.StatusOK)
+			logger.Debug(time.Now(), "request:", *r, time_sub(start_time), http.StatusOK)
 			return
 		}
 	}
