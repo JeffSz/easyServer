@@ -65,13 +65,13 @@ func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, router := range server.routes{
 		if router.pattern.MatchString(r.URL.Path) && (router.method & HTTPMethods[strings.ToUpper(r.Method)] != 0x00){
 			router.handler(w, r)
-			logger.Debug(time.Now(), "request:", r, time_sub(start_time), http.StatusOK)
+			logger.Debug(time.Now(), "request:", *r, time_sub(start_time), http.StatusOK)
 			return
 		}
 	}
 	w.WriteHeader(http.StatusNotFound)
 	io.WriteString(w, "Page not found")
-	logger.Warn(time.Now(), "request:", r, time_sub(start_time), http.StatusNotFound)
+	logger.Warn(time.Now(), "request:", *r, time_sub(start_time), http.StatusNotFound)
 }
 
 func init() {
