@@ -51,15 +51,14 @@ func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	start_time := time.Now()
 	defer func() {
 		if err := recover(); err != nil {
-			logger.Info(fmt.Sprintf("%s\n", stack()))
+			logger.Error(fmt.Sprintf("Error found: %s\n", stack()))
+			w.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(w, "Server Error")
+			logger.Error(err)
+			logger.Error(time.Now(), "request:", r, time_sub(start_time), http.StatusInternalServerError)
+
 			if er, is := err.(Error); is{
 				server.errorHandler(w, er)
-				logger.Debug(time.Now(), "request:", r, time_sub(start_time), http.StatusBadRequest)
-			}else{
-				w.WriteHeader(http.StatusInternalServerError)
-				io.WriteString(w, "Server Error")
-				logger.Error(err)
-				logger.Error(time.Now(), "request:", r, time_sub(start_time), http.StatusInternalServerError)
 			}
 		}
 	}()
