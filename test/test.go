@@ -67,7 +67,7 @@ func main() {
 
 	fmt.Printf("Server start on %s: %s \n", ip, *port)
 
-	if err = webServer.ListenAndServe(); err != nil{
+	if err := webServer.ListenAndServe(); err != nil{
 		panic(err)
 	}
 }

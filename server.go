@@ -8,14 +8,16 @@ import (
 	"fmt"
 	"io"
 	"errors"
-	logger "github.com/JeffSz/logger"
+	"github.com/JeffSz/logger"
 	"strings"
 	"net"
 )
-func time_sub(t time.Time) int64 {
+func timeSub(t time.Time) int64 {
 	return int64(time.Now().Sub(t) / time.Millisecond)
 }
 type Method int
+type ErrorHandler func(w http.ResponseWriter, error Error) error
+type RouteHandler func(http.ResponseWriter, *http.Request)
 var HTTPMethods = make(map[string]Method)
 
 const(
@@ -29,15 +31,15 @@ const(
 type MyRouter struct{
 	method Method
 	pattern *regexp.Regexp
-	handler func(http.ResponseWriter, *http.Request)
+	handler RouteHandler
 }
 type Server struct{
 	routes []MyRouter
-	errorHandler func(w http.ResponseWriter, error Error) error
+	errorHandler ErrorHandler
 }
-func (server *Server) AddRoute(url string, method Method, handler func(http.ResponseWriter, *http.Request)) error{
+func (server *Server) AddRoute(url string, method Method, handler RouteHandler) error{
 	if method != HTTP_GET && method != HTTP_POST && method != HTTP_ALL{
-		return errors.New("Method not allow")
+		return errors.New("method not allow")
 	}
 	if pattern, err := regexp.Compile(url); err != nil{
 		return err
@@ -47,15 +49,19 @@ func (server *Server) AddRoute(url string, method Method, handler func(http.Resp
 	}
 }
 
+func (server *Server) SetErrorHandler(errorHandler ErrorHandler) {
+	server.errorHandler = errorHandler
+}
+
 func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	start_time := time.Now()
+	startTime := time.Now()
 	defer func() {
 		if err := recover(); err != nil {
 			logger.Error(fmt.Sprintf("Error found: %s\n", stack()))
 			w.WriteHeader(http.StatusInternalServerError)
 			io.WriteString(w, "Server Error")
 			logger.Error(err)
-			logger.Error(time.Now(), "request:", r, time_sub(start_time), http.StatusInternalServerError)
+			logger.Error(time.Now(), "request:", r, timeSub(startTime), http.StatusInternalServerError)
 
 			if er, is := err.(Error); is{
 				server.errorHandler(w, er)
@@ -65,13 +71,13 @@ func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, router := range server.routes{
 		if router.pattern.MatchString(r.URL.Path) && (router.method & HTTPMethods[strings.ToUpper(r.Method)] != 0x00){
 			router.handler(w, r)
-			logger.Debug(time.Now(), "request:", *r, time_sub(start_time), http.StatusOK)
+			logger.Debug(time.Now(), "request:", *r, timeSub(startTime), http.StatusOK)
 			return
 		}
 	}
 	w.WriteHeader(http.StatusNotFound)
 	io.WriteString(w, "Page not found")
-	logger.Warn(time.Now(), "request:", *r, time_sub(start_time), http.StatusNotFound)
+	logger.Warn(time.Now(), "request:", *r, timeSub(startTime), http.StatusNotFound)
 }
 
 func init() {
@@ -83,30 +89,30 @@ func init() {
 }
 
 func LocalIP() string{
-	addrs, err := net.InterfaceAddrs()
+	address, err := net.InterfaceAddrs()
 
 	if err != nil {
 		panic(err)
 	}
 
-	for _, address := range addrs {
-		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-			if ipnet.IP.To4() != nil {
-				return ipnet.IP.String()
+	for _, address := range address {
+		if ipNet, ok := address.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
+			if ipNet.IP.To4() != nil {
+				return ipNet.IP.String()
 			}
 		}
 	}
 	panic("No such device")
 }
 
-func NewServer(errorHandler func(http.ResponseWriter, Error) error) *Server{
+func NewServer(errorHandler ErrorHandler) *Server{
 	return &Server{routes:make([]MyRouter, 0), errorHandler: errorHandler}
 }
 
-func easyHander(w http.ResponseWriter, error Error) error{
+func easyHandler(w http.ResponseWriter, error Error) error{
 	w.WriteHeader(http.StatusBadRequest)
 	io.WriteString(w, error.Error())
 	return nil
 }
 
-var EasyServer = NewServer(easyHander)
+var EasyServer = NewServer(easyHandler)
