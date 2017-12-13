@@ -18,7 +18,7 @@ func timeSub(t time.Time) int64 {
 }
 
 type Method int
-type ErrorHandler func(w http.ResponseWriter, error Error) error
+type ErrorHandler func(w http.ResponseWriter, error error) error
 type RouteHandler func(http.ResponseWriter, *http.Request)
 
 var HTTPMethods = make(map[string]Method)
@@ -67,7 +67,7 @@ func (server Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			logger.Error(err)
 			logger.Error(time.Now(), "request:", r, timeSub(startTime), http.StatusInternalServerError)
 
-			if er, is := err.(Error); is {
+			if er, is := err.(error); is {
 				server.errorHandler(w, er)
 			}
 		}
@@ -113,7 +113,7 @@ func NewServer(errorHandler ErrorHandler) *Server {
 	return &Server{routes: make([]MyRouter, 0), errorHandler: errorHandler}
 }
 
-func easyHandler(w http.ResponseWriter, error Error) error {
+func easyHandler(w http.ResponseWriter, error error) error {
 	w.WriteHeader(http.StatusBadRequest)
 	io.WriteString(w, error.Error())
 	return nil
